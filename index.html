@@ -325,6 +325,11 @@ body {
   width: 140px; height: 140px; padding: 10px; background: var(--white);
   border: 1px solid var(--border-light); border-radius: 6px;
 }
+.qr-donate-link {
+  display: inline-block; margin-top: 10px;
+  font-family: 'Noto Sans KR'; font-size: 13px; font-weight: 700;
+  color: var(--forest-700); text-decoration: underline;
+}
 
 .closing-block { margin: 40px 0 8px; padding: 30px 20px 6px; text-align: center; border-top: 1px solid var(--border-light); }
 .closing-verse {
@@ -1110,7 +1115,10 @@ body {
 
     <div class="qr-box">
       <div class="qr-label">법인 후원 QR코드</div>
-      <img src="images/175/donate-qr.png" alt="법인 후원 QR코드">
+      <a href="https://v3.ngocms.co.kr/system/member_signup/join_option_select_03.html?id=hvap1004" target="_blank">
+        <img src="images/175/donate-qr.png" alt="법인 후원 QR코드">
+      </a>
+      <a class="qr-donate-link" href="https://v3.ngocms.co.kr/system/member_signup/join_option_select_03.html?id=hvap1004" target="_blank">후원 링크</a>
     </div>
 
     <div class="sublist-head">함께 하는 사람들</div>
