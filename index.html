@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>평화세상 · 통권 175호</title>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="사단법인 참된평화를만드는사람들">
+<meta property="og:title" content="평화세상 · 통권 175호">
+<meta property="og:description" content="사단법인 참된평화를만드는사람들이 전하는 소식지 175호입니다. 이번 호 이야기를 확인해보세요.">
+<meta property="og:url" content="https://ksk0203-oss.github.io/peacenews175/">
+<meta property="og:image" content="https://ksk0203-oss.github.io/peacenews175/images/175/photo-07.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="평화세상 · 통권 175호">
+<meta name="twitter:description" content="사단법인 참된평화를만드는사람들이 전하는 소식지 175호입니다.">
+<meta name="twitter:image" content="https://ksk0203-oss.github.io/peacenews175/images/175/photo-07.jpg">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 
@@ -1374,6 +1386,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 
 <div class="float-controls">
   <button class="float-btn top-btn" id="topBtn" onclick="scrollToTop()" aria-label="맨 위로">&#8593;</button>
+  <button class="float-btn" id="shareBtn" onclick="sharePage()" aria-label="공유하기" style="background:#FEE500; color:#3C1E1E; font-size:19px;">&#128172;</button>
   <button class="float-btn" id="darkBtn" onclick="toggleDarkMode()" aria-label="다크모드 전환">&#127769;</button>
   <div class="font-controls">
     <button class="float-btn" onclick="changeFontSize(1)" aria-label="글자 크게">A+</button>
@@ -1417,6 +1430,23 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     if (window.scrollY > 400) btn.classList.add('show');
     else btn.classList.remove('show');
   });
+
+  window.sharePage = function() {
+    var shareData = {
+      title: '평화세상 · 통권 175호',
+      text: '사단법인 참된평화를만드는사람들 소식지 175호입니다.',
+      url: 'https://ksk0203-oss.github.io/peacenews175/'
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(function() {});
+    } else {
+      navigator.clipboard.writeText(shareData.url).then(function() {
+        alert('링크가 복사되었습니다. 카카오톡 등에 붙여넣기 해주세요!');
+      }).catch(function() {
+        prompt('아래 링크를 복사해서 공유해주세요:', shareData.url);
+      });
+    }
+  };
 })();
 </script>
 
