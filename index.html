@@ -468,6 +468,13 @@ body {
 .tts-btn:hover { background: var(--sage); }
 .tts-btn.playing { background: var(--terracotta); border-color: var(--terracotta); color: var(--white); }
 .tts-btn .tts-icon { font-size: 14px; }
+.tts-rate {
+  margin-top: 14px; margin-left: 6px;
+  padding: 7px 10px; border-radius: 999px;
+  border: 1px solid var(--sage); background: var(--white);
+  font-family: 'Noto Sans KR'; font-size: 12.5px; font-weight: 600; color: var(--forest-900);
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -571,6 +578,13 @@ body {
         <div class="article-title">조작조작</div>
         <div class="article-byline">김주용 법인 사무총장</div>
 <button class="tts-btn" data-article="article-01" onclick="toggleTTS('article-01', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -602,6 +616,13 @@ body {
         <div class="article-title">全心, 그리고 僞善(위선) 사이에서</div>
         <div class="article-byline">이은태 법인 이사장</div>
 <button class="tts-btn" data-article="article-02" onclick="toggleTTS('article-02', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -665,6 +686,13 @@ body {
         <div class="article-subtitle">홍동근의 화해 신학에서 길을 찾다</div>
         <div class="article-byline">이우성 수원성교회 교육목사 · 2026. 06. 09</div>
 <button class="tts-btn" data-article="article-03" onclick="toggleTTS('article-03', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -869,6 +897,13 @@ body {
         <div class="article-title">다시, 함께 걷기로 했다</div>
         <div class="article-byline">김성국 목사</div>
 <button class="tts-btn" data-article="article-04" onclick="toggleTTS('article-04', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -944,6 +979,13 @@ body {
         <div class="article-title">난 AI가 참 좋다. 하지만...</div>
         <div class="article-byline">김성국 목사</div>
 <button class="tts-btn" data-article="article-05" onclick="toggleTTS('article-05', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -1020,6 +1062,13 @@ body {
         <span class="section-label">법인 소식</span>
         <div class="article-title">지난 174호에 싣지 못한 이야기들</div>
 <button class="tts-btn" data-article="article-06" onclick="toggleTTS('article-06', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -1090,6 +1139,13 @@ body {
         <div class="article-title">후원해 주셔서 고맙습니다</div>
         <div class="article-byline">2026년 5, 6월에 후원해 주신 개인과 교회 명단</div>
 <button class="tts-btn" data-article="article-07" onclick="toggleTTS('article-07', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
+      <select class="tts-rate" onchange="onRateChange(this)">
+        <option value="0.75">0.75x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
       </div>
     </div>
   </div>
@@ -1201,6 +1257,7 @@ body {
 (function() {
   var currentId = null;
   var currentBtn = null;
+  var currentRate = 1;
 
   function getArticleText(articleId) {
     var startEl = document.getElementById(articleId);
@@ -1224,6 +1281,22 @@ body {
     btn.querySelector('.tts-icon').textContent = '\u{1F50A}';
   }
 
+  function speak(articleId, btn, rate) {
+    var text = getArticleText(articleId);
+    if (!text) return;
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ko-KR';
+    utter.rate = rate;
+    utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+    utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+
+    currentId = articleId; currentBtn = btn;
+    btn.classList.add('playing');
+    btn.querySelector('.tts-label').textContent = '정지';
+    btn.querySelector('.tts-icon').textContent = '\u23F9';
+    window.speechSynthesis.speak(utter);
+  }
+
   window.toggleTTS = function(articleId, btn) {
     if (!('speechSynthesis' in window)) {
       alert('이 브라우저에서는 음성 낭독 기능을 지원하지 않습니다.');
@@ -1237,20 +1310,18 @@ body {
     }
     window.speechSynthesis.cancel();
     resetBtn(currentBtn);
+    speak(articleId, btn, currentRate);
+  };
 
-    var text = getArticleText(articleId);
-    if (!text) return;
-    var utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'ko-KR';
-    utter.rate = 1.0;
-    utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; };
-    utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; };
-
-    currentId = articleId; currentBtn = btn;
-    btn.classList.add('playing');
-    btn.querySelector('.tts-label').textContent = '정지';
-    btn.querySelector('.tts-icon').textContent = '\u23F9';
-    window.speechSynthesis.speak(utter);
+  window.onRateChange = function(sel) {
+    currentRate = parseFloat(sel.value);
+    // 모든 배속 선택창을 동일한 값으로 맞춤
+    document.querySelectorAll('.tts-rate').forEach(function(s) { s.value = sel.value; });
+    // 현재 재생 중이면 새 배속으로 이어서 다시 시작
+    if (currentId && currentBtn) {
+      window.speechSynthesis.cancel();
+      speak(currentId, currentBtn, currentRate);
+    }
   };
 
   window.addEventListener('beforeunload', function() {
