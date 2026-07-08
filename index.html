@@ -254,6 +254,51 @@ body {
   text-align: center; line-height: 1.6;
 }
 
+/* ── 법인 광고 (기사 6 하단) ── */
+.corp-ad {
+  margin: 34px 0 4px; padding: 26px 24px; scroll-margin-top: 24px;
+  background: var(--sage-light); border-top: 3px solid var(--terracotta);
+}
+.corp-ad-label {
+  font-family: 'Noto Sans KR'; font-size: 12.5px; font-weight: 700; letter-spacing: 2px;
+  color: var(--terracotta); text-transform: uppercase; margin-bottom: 10px;
+}
+.corp-ad-title {
+  font-family: 'Noto Serif KR'; font-size: 20px; font-weight: 700; color: var(--forest-900);
+  line-height: 1.4; margin-bottom: 18px;
+}
+.corp-ad p.body-text { padding: 0; font-size: 15px; line-height: 1.85; margin-top: 16px; }
+.corp-ad p.body-text:first-of-type { margin-top: 0; }
+.corp-ad .ad-quote {
+  font-family: 'Noto Serif KR'; font-weight: 600; color: var(--forest-900);
+}
+.corp-ad-signature {
+  margin-top: 22px; text-align: right; font-size: 13.5px; color: var(--text-gray);
+}
+
+/* ── 팝업(프로모션) ── */
+.promo-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(15,39,33,0.72);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.promo-overlay.hidden { display: none; }
+.promo-modal { position: relative; max-width: 340px; width: 100%; }
+.promo-modal a { display: block; }
+.promo-modal img {
+  width: 100%; display: block; border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+.promo-close {
+  position: absolute; top: -14px; right: -14px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--white); color: var(--forest-900);
+  border: none; font-size: 18px; font-weight: 700; line-height: 1;
+  cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+}
+
 /* ── 후원 감사 (기사 7) ── */
 .sublist-head {
   font-family: 'Noto Serif KR'; font-weight: 700; font-size: 15.5px; color: var(--forest-900);
@@ -997,6 +1042,17 @@ body {
       <img src="images/175/photo-14.jpg" alt="평화교실 클로드 활용 강의 2">
     </div>
 
+    <div class="corp-ad" id="corp-ad">
+      <div class="corp-ad-label">법인 광고</div>
+      <div class="corp-ad-title">카자흐스탄 평화기행단 모집</div>
+      <p class="body-text ad-quote">[기억을 지키는 일, 평화를 만드는 일]</p>
+      <p class="body-text">현재 저희는 카자흐스탄 고려인 마을들을 방문하며 여러 사역을 이어가고 있습니다. 지난해에는 독립운동가 최재형 선생님의 증손녀인 박엘레나 학생에게 작은 장학금을 전달하였고, 겨울철에는 아직도 석탄 난방에 의존하는 고려인 가정들에 석탄을 지원하였습니다.</p>
+      <p class="body-text">하지만 지금 저희가 가장 중요하게 준비하고 있는 일은 카자흐스탄 박박티(Baqbaqty) 마을에 &lsquo;고려인 기억박물관 및 공동체 센터&rsquo;를 세우는 일입니다. 박박티 마을에는 아직 고려인 어르신들이 살아가고 계십니다. 그러나 젊은 세대는 도시로 떠나고, 시간이 흐를수록 삶의 기억과 역사도 함께 사라지고 있습니다. 어르신들이 평생 간직해 오신 물건들, 삶의 이야기들, 강제이주의 기억들, 신앙의 흔적들, 그리고 독립운동의 역사까지도 기록되지 않으면 사라질 수 있습니다. 저희는 그 기억을 남기고 싶습니다.</p>
+      <p class="body-text">그것은 단순히 과거를 보존하는 일이 아니라, 한 민족의 존엄과 신앙, 그리고 평화의 역사를 다음 세대에 전하는 일이기 때문입니다. 우리가 추구하는 평화는 단지 갈등이 없는 상태가 아닙니다. 하나님의 형상대로 지음받은 인간의 존엄을 지키고, 잊혀가는 사람들을 기억하며, 깨어진 공동체를 다시 이어가는 삶의 방식입니다. 그래서 교회의 예배와 선교, 회복적 정의 운동과 디아스포라 사역은 서로 다른 일이 아니라 하나의 사명이라고 믿고 있습니다.</p>
+      <p class="body-text">부족하지만 하나님께서 맡기신 이 길을 계속 걸어가고자 합니다. 사랑하는 동역자 여러분께서도 기도와 마음으로 함께해 주시길 부탁드립니다. 여러분의 관심과 후원, 그리고 기도가 누군가의 삶을 지키고, 사라질 기억을 다음 세대에 남기는 귀한 씨앗이 될 것입니다. 주님의 평화가 여러분의 가정과 삶 가운데 함께하시기를 기도합니다.</p>
+      <p class="corp-ad-signature">사단법인 참된평화를만드는사람들 사무총장</p>
+    </div>
+
   </div>
 
   <div class="ornament-divider"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
@@ -1084,6 +1140,34 @@ body {
   </div>
 
 </div>
+
+<div class="promo-overlay" id="promoOverlay">
+  <div class="promo-modal">
+    <button class="promo-close" id="promoClose" aria-label="닫기">&times;</button>
+    <a href="#corp-ad" id="promoLink">
+      <img src="images/175/kazakhstan-poster.jpg" alt="2026 카자흐스탄 평화기행 - 고려인을 만나러 갑니다">
+    </a>
+  </div>
+</div>
+
+<script>
+(function() {
+  var overlay = document.getElementById('promoOverlay');
+  var closeBtn = document.getElementById('promoClose');
+  var link = document.getElementById('promoLink');
+  function closePromo() { overlay.classList.add('hidden'); }
+  closeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    closePromo();
+  });
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closePromo();
+  });
+  link.addEventListener('click', function() {
+    closePromo();
+  });
+})();
+</script>
 
 </body>
 </html>
