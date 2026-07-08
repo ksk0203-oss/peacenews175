@@ -433,6 +433,8 @@ body {
 .index-tab--05 { background: #6B5B7E; }
 .index-tab--06 { background: #8A6D4A; }
 .index-tab--07 { background: var(--forest-700); }
+.index-tabs.font-lg { left: calc(50% + 391px); }
+.index-tabs.font-sm { left: calc(50% + 313px); }
 
 @media (max-width: 1040px) {
   .index-tabs {
@@ -1397,12 +1399,17 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 <script>
 (function() {
   var wrap = document.querySelector('.email-wrap');
+  var indexTabs = document.querySelector('.index-tabs');
   var sizes = ['font-sm', '', 'font-lg'];
   var sizeIdx = 1;
 
   function applyFontSize() {
     wrap.classList.remove('font-sm', 'font-lg');
     if (sizes[sizeIdx]) wrap.classList.add(sizes[sizeIdx]);
+    if (indexTabs) {
+      indexTabs.classList.remove('font-sm', 'font-lg');
+      if (sizes[sizeIdx]) indexTabs.classList.add(sizes[sizeIdx]);
+    }
     localStorage.setItem('pw175-fontsize', sizeIdx);
   }
   window.changeFontSize = function(dir) {
