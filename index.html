@@ -22,6 +22,19 @@
   --text-gray: #5B5B5B;
   --border-light: #E3E3E0;
 }
+body.dark-mode {
+  --white: #1E2426;
+  --off-white: #14181A;
+  --footer-gray: #1B201F;
+  --text-black: #E8E8E6;
+  --text-gray: #A8AEAC;
+  --border-light: #333937;
+  --sage-light: #26302C;
+  --terracotta-light: #3A2E22;
+}
+body { transition: background 0.2s, color 0.2s; }
+body.dark-mode .closing-logo img { background:#fff; padding:8px; border-radius:8px; }
+body.dark-mode .qr-box img { background:#ffffff !important; }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -44,6 +57,8 @@ body {
   box-shadow: 0 4px 28px rgba(15,39,33,0.08);
   overflow: hidden;
 }
+.email-wrap.font-sm { zoom: 0.92; }
+.email-wrap.font-lg { zoom: 1.15; }
 
 /* ── 히어로 ── */
 .hero {
@@ -468,6 +483,33 @@ body {
 .tts-btn:hover { background: var(--sage); }
 .tts-btn.playing { background: var(--terracotta); border-color: var(--terracotta); color: var(--white); }
 .tts-btn .tts-icon { font-size: 14px; }
+
+/* ── 플로팅 컨트롤 ── */
+.float-controls {
+  position: fixed; right: 16px; bottom: 16px; z-index: 500;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.float-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--forest-900); color: var(--white);
+  border: none; box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Sans KR'; font-size: 15px; font-weight: 700;
+  cursor: pointer;
+}
+.font-controls {
+  display: flex; flex-direction: column; background: var(--forest-900);
+  border-radius: 22px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+}
+.font-controls .float-btn { box-shadow: none; border-radius: 0; }
+.font-controls .float-btn + .float-btn { border-top: 1px solid rgba(255,255,255,0.2); }
+.top-btn {
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+}
+.top-btn.show { opacity: 1; visibility: visible; transform: translateY(0); }
+body.dark-mode .float-btn { background: var(--terracotta); }
+body.dark-mode .font-controls { background: var(--terracotta); }
 .tts-rate {
   margin-top: 14px; margin-left: 6px;
   padding: 7px 10px; border-radius: 999px;
@@ -1326,6 +1368,54 @@ body {
 
   window.addEventListener('beforeunload', function() {
     window.speechSynthesis.cancel();
+  });
+})();
+</script>
+
+<div class="float-controls">
+  <button class="float-btn top-btn" id="topBtn" onclick="scrollToTop()" aria-label="맨 위로">&#8593;</button>
+  <button class="float-btn" id="darkBtn" onclick="toggleDarkMode()" aria-label="다크모드 전환">&#127769;</button>
+  <div class="font-controls">
+    <button class="float-btn" onclick="changeFontSize(1)" aria-label="글자 크게">A+</button>
+    <button class="float-btn" onclick="changeFontSize(-1)" aria-label="글자 작게">A-</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var wrap = document.querySelector('.email-wrap');
+  var sizes = ['font-sm', '', 'font-lg'];
+  var sizeIdx = 1;
+
+  function applyFontSize() {
+    wrap.classList.remove('font-sm', 'font-lg');
+    if (sizes[sizeIdx]) wrap.classList.add(sizes[sizeIdx]);
+    localStorage.setItem('pw175-fontsize', sizeIdx);
+  }
+  window.changeFontSize = function(dir) {
+    sizeIdx = Math.min(2, Math.max(0, sizeIdx + dir));
+    applyFontSize();
+  };
+  var savedSize = localStorage.getItem('pw175-fontsize');
+  if (savedSize !== null) { sizeIdx = parseInt(savedSize, 10); applyFontSize(); }
+
+  function applyDark(on) {
+    document.body.classList.toggle('dark-mode', on);
+    document.getElementById('darkBtn').innerHTML = on ? '&#9728;' : '&#127769;';
+    localStorage.setItem('pw175-dark', on ? '1' : '0');
+  }
+  window.toggleDarkMode = function() {
+    applyDark(!document.body.classList.contains('dark-mode'));
+  };
+  if (localStorage.getItem('pw175-dark') === '1') applyDark(true);
+
+  window.scrollToTop = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('topBtn');
+    if (window.scrollY > 400) btn.classList.add('show');
+    else btn.classList.remove('show');
   });
 })();
 </script>
