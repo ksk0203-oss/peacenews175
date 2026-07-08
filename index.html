@@ -455,6 +455,19 @@ body {
 
 .stanza-line { margin-top: 6px !important; }
 .stanza-gap { height: 26px; }
+
+/* ── 음성 듣기 버튼 ── */
+.tts-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px; padding: 7px 16px;
+  background: var(--sage-light); border: 1px solid var(--sage);
+  border-radius: 999px; cursor: pointer;
+  font-family: 'Noto Sans KR'; font-size: 13px; font-weight: 600; color: var(--forest-900);
+  transition: background 0.15s;
+}
+.tts-btn:hover { background: var(--sage); }
+.tts-btn.playing { background: var(--terracotta); border-color: var(--terracotta); color: var(--white); }
+.tts-btn .tts-icon { font-size: 14px; }
 </style>
 </head>
 <body>
@@ -557,6 +570,7 @@ body {
         <span class="section-label">《평화세상》을 열며</span>
         <div class="article-title">조작조작</div>
         <div class="article-byline">김주용 법인 사무총장</div>
+<button class="tts-btn" data-article="article-01" onclick="toggleTTS('article-01', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -587,6 +601,7 @@ body {
         <span class="section-label">이사장의 편지</span>
         <div class="article-title">全心, 그리고 僞善(위선) 사이에서</div>
         <div class="article-byline">이은태 법인 이사장</div>
+<button class="tts-btn" data-article="article-02" onclick="toggleTTS('article-02', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -649,6 +664,7 @@ body {
         <div class="article-title">적대적 두 국가 시대, 우리는 어떤 평화를 만들 것인가?</div>
         <div class="article-subtitle">홍동근의 화해 신학에서 길을 찾다</div>
         <div class="article-byline">이우성 수원성교회 교육목사 · 2026. 06. 09</div>
+<button class="tts-btn" data-article="article-03" onclick="toggleTTS('article-03', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -852,6 +868,7 @@ body {
         <span class="section-label">간사의 편지</span>
         <div class="article-title">다시, 함께 걷기로 했다</div>
         <div class="article-byline">김성국 목사</div>
+<button class="tts-btn" data-article="article-04" onclick="toggleTTS('article-04', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -926,6 +943,7 @@ body {
         <span class="section-label">평화교실</span>
         <div class="article-title">난 AI가 참 좋다. 하지만...</div>
         <div class="article-byline">김성국 목사</div>
+<button class="tts-btn" data-article="article-05" onclick="toggleTTS('article-05', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -1001,6 +1019,7 @@ body {
       <div class="article-heading">
         <span class="section-label">법인 소식</span>
         <div class="article-title">지난 174호에 싣지 못한 이야기들</div>
+<button class="tts-btn" data-article="article-06" onclick="toggleTTS('article-06', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -1070,6 +1089,7 @@ body {
         <span class="section-label">후원 감사</span>
         <div class="article-title">후원해 주셔서 고맙습니다</div>
         <div class="article-byline">2026년 5, 6월에 후원해 주신 개인과 교회 명단</div>
+<button class="tts-btn" data-article="article-07" onclick="toggleTTS('article-07', this)"><span class="tts-icon">🔊</span><span class="tts-label">이 글 듣기</span></button>
       </div>
     </div>
   </div>
@@ -1173,6 +1193,68 @@ body {
   });
   link.addEventListener('click', function() {
     closePromo();
+  });
+})();
+</script>
+
+<script>
+(function() {
+  var currentId = null;
+  var currentBtn = null;
+
+  function getArticleText(articleId) {
+    var startEl = document.getElementById(articleId);
+    if (!startEl) return '';
+    var parts = [];
+    var titleEl = startEl.querySelector('.article-title');
+    if (titleEl) parts.push(titleEl.innerText);
+    var el = startEl.nextElementSibling;
+    while (el && !el.classList.contains('article')) {
+      if (el.classList.contains('ornament-divider')) break;
+      parts.push(el.innerText);
+      el = el.nextElementSibling;
+    }
+    return parts.join('. ').replace(/\s+/g, ' ').trim();
+  }
+
+  function resetBtn(btn) {
+    if (!btn) return;
+    btn.classList.remove('playing');
+    btn.querySelector('.tts-label').textContent = '이 글 듣기';
+    btn.querySelector('.tts-icon').textContent = '\u{1F50A}';
+  }
+
+  window.toggleTTS = function(articleId, btn) {
+    if (!('speechSynthesis' in window)) {
+      alert('이 브라우저에서는 음성 낭독 기능을 지원하지 않습니다.');
+      return;
+    }
+    if (currentId === articleId) {
+      window.speechSynthesis.cancel();
+      resetBtn(currentBtn);
+      currentId = null; currentBtn = null;
+      return;
+    }
+    window.speechSynthesis.cancel();
+    resetBtn(currentBtn);
+
+    var text = getArticleText(articleId);
+    if (!text) return;
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ko-KR';
+    utter.rate = 1.0;
+    utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+    utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+
+    currentId = articleId; currentBtn = btn;
+    btn.classList.add('playing');
+    btn.querySelector('.tts-label').textContent = '정지';
+    btn.querySelector('.tts-icon').textContent = '\u23F9';
+    window.speechSynthesis.speak(utter);
+  };
+
+  window.addEventListener('beforeunload', function() {
+    window.speechSynthesis.cancel();
   });
 })();
 </script>
