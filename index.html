@@ -499,6 +499,33 @@ body {
 .tts-btn .tts-icon { font-size: 14px; }
 
 /* ── 플로팅 컨트롤 ── */
+/* ── 읽기 진행률 바 ── */
+.read-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--terracotta); z-index: 900; transition: width 0.05s linear;
+}
+
+/* ── 사진 확대 라이트박스 ── */
+.photo-grid img, .photo-single img { cursor: zoom-in; }
+.lightbox-overlay {
+  position: fixed; inset: 0; z-index: 950;
+  background: rgba(15,39,33,0.9);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.lightbox-overlay.show { display: flex; }
+.lightbox-overlay img {
+  max-width: 100%; max-height: 100%; border-radius: 6px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.lightbox-close {
+  position: absolute; top: 20px; right: 24px;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--white); color: var(--forest-900);
+  border: none; font-size: 20px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
 .float-controls {
   position: fixed; right: 16px; bottom: 16px; z-index: 500;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -1386,6 +1413,13 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 })();
 </script>
 
+<div class="read-progress" id="readProgress"></div>
+
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <button class="lightbox-close" id="lightboxClose" aria-label="닫기">&times;</button>
+  <img id="lightboxImg" src="" alt="사진 확대">
+</div>
+
 <div class="float-controls">
   <button class="float-btn top-btn" id="topBtn" onclick="scrollToTop()" aria-label="맨 위로">&#8593;</button>
   <button class="float-btn" id="shareBtn" onclick="sharePage()" aria-label="공유하기" style="background:#FEE500; color:#3C1E1E; font-size:19px;">&#128172;</button>
@@ -1454,6 +1488,49 @@ body.dark-mode .font-controls { background: var(--terracotta); }
       });
     }
   };
+})();
+</script>
+
+<script>
+(function() {
+  // 읽기 진행률 바
+  var bar = document.getElementById('readProgress');
+  function updateProgress() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress);
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // 사진 클릭 확대 라이트박스
+  var overlay = document.getElementById('lightboxOverlay');
+  var lbImg = document.getElementById('lightboxImg');
+  var lbClose = document.getElementById('lightboxClose');
+
+  function openLightbox(src, alt) {
+    lbImg.src = src;
+    lbImg.alt = alt || '사진 확대';
+    overlay.classList.add('show');
+  }
+  function closeLightbox() {
+    overlay.classList.remove('show');
+    lbImg.src = '';
+  }
+  document.querySelectorAll('.photo-grid img, .photo-single img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      openLightbox(img.src, img.alt);
+    });
+  });
+  lbClose.addEventListener('click', closeLightbox);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
 })();
 </script>
 
