@@ -1343,6 +1343,39 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   var currentId = null;
   var currentBtn = null;
   var currentRate = 1;
+  var bestVoice = null;
+
+  function pickBestVoice() {
+    var voices = window.speechSynthesis.getVoices() || [];
+    var ko = voices.filter(function(v) { return v.lang && v.lang.toLowerCase().indexOf('ko') === 0; });
+    if (!ko.length) return null;
+    // 로컬/저품질(예: eSpeak, Compact) 보다 온라인/고품질 음성을 우선 선택
+    var scored = ko.slice().sort(function(a, b) {
+      function score(v) {
+        var n = v.name.toLowerCase();
+        var s = 0;
+        if (!v.localService) s += 3;               // 온라인(네트워크) 음성이 대체로 더 자연스러움
+        if (n.indexOf('google') !== -1) s += 2;
+        if (n.indexOf('neural') !== -1) s += 2;
+        if (n.indexOf('yuna') !== -1 || n.indexOf('sora') !== -1 || n.indexOf('injoon') !== -1) s += 1;
+        if (n.indexOf('compact') !== -1) s -= 2;
+        return s;
+      }
+      return score(b) - score(a);
+    });
+    return scored[0];
+  }
+  function ensureVoice(cb) {
+    if (bestVoice) { cb(); return; }
+    bestVoice = pickBestVoice();
+    if (bestVoice) { cb(); return; }
+    // 목소리 목록이 아직 로딩 중인 브라우저 대응
+    window.speechSynthesis.onvoiceschanged = function() {
+      bestVoice = pickBestVoice();
+      cb();
+    };
+    setTimeout(cb, 300); // 폴백
+  }
 
   function getArticleText(articleId) {
     var startEl = document.getElementById(articleId);
@@ -1353,10 +1386,18 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     var el = startEl.nextElementSibling;
     while (el && !el.classList.contains('article')) {
       if (el.classList.contains('ornament-divider')) break;
-      parts.push(el.innerText);
+      var t = (el.innerText || '').trim();
+      if (t) parts.push(t);
       el = el.nextElementSibling;
     }
-    return parts.join('. ').replace(/\s+/g, ' ').trim();
+    return parts.join('. ').replace(/\s+/g, ' ').replace(/\.{2,}/g, '.').trim();
+  }
+
+  // 문장 단위로 잘라서 각각 별도 발화로 큐에 쌓으면, 긴 글 전체를 하나로 읽을 때보다
+  // 문장 사이의 자연스러운 끊어읽기(호흡)가 생기고 억양도 덜 단조로워짐
+  function splitIntoSentences(text) {
+    var raw = text.match(/[^.!?]+[.!?]*/g) || [text];
+    return raw.map(function(s) { return s.trim(); }).filter(Boolean);
   }
 
   function resetBtn(btn) {
@@ -1369,17 +1410,27 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   function speak(articleId, btn, rate) {
     var text = getArticleText(articleId);
     if (!text) return;
-    var utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'ko-KR';
-    utter.rate = rate;
-    utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; };
-    utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+    var sentences = splitIntoSentences(text);
 
     currentId = articleId; currentBtn = btn;
     btn.classList.add('playing');
     btn.querySelector('.tts-label').textContent = '정지';
     btn.querySelector('.tts-icon').textContent = '\u23F9';
-    window.speechSynthesis.speak(utter);
+
+    ensureVoice(function() {
+      sentences.forEach(function(sentence, idx) {
+        var utter = new SpeechSynthesisUtterance(sentence);
+        utter.lang = 'ko-KR';
+        utter.rate = rate;
+        utter.pitch = 1;
+        if (bestVoice) utter.voice = bestVoice;
+        if (idx === sentences.length - 1) {
+          utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+          utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; };
+        }
+        window.speechSynthesis.speak(utter);
+      });
+    });
   }
 
   window.toggleTTS = function(articleId, btn) {
