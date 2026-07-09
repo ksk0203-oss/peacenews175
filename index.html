@@ -178,16 +178,17 @@ body {
 .article-title {
   font-family: 'Noto Serif KR'; font-size: 26px; font-weight: 700; color: var(--forest-900);
   line-height: 1.4; margin-bottom: 10px;
-  opacity: 0; translate: 0 22px; scale: 1;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), translate 0.8s cubic-bezier(0.16, 1, 0.3, 1), scale 0.35s ease;
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: default;
   transform-origin: left center;
 }
 .article-title.in-view {
-  opacity: 1; translate: 0 0;
+  opacity: 1; transform: translateY(0);
 }
-.article-title:hover {
-  scale: 1.05;
+.article-title.in-view:hover {
+  transform: scale(1.05);
+  transition: transform 0.35s ease;
 }
 .article-num {
   opacity: 0; transform: scale(0.6);
