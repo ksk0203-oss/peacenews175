@@ -103,10 +103,12 @@ body {
 .hero-title img {
   display: block; margin: 0 auto;
   width: 100%; max-width: 420px; height: auto;
-  opacity: 0; transform: scale(0.55) translateY(24px);
-  animation: heroLogoIn 2.6s cubic-bezier(0.22, 1.4, 0.36, 1) 0.2s forwards;
   transition: transform 0.4s ease;
   cursor: pointer;
+}
+.hero-title img.hero-animate {
+  opacity: 0; transform: scale(0.55) translateY(24px);
+  animation: heroLogoIn 2.6s cubic-bezier(0.22, 1.4, 0.36, 1) 0.2s forwards;
 }
 .hero-title img:hover {
   transform: scale(1.12);
@@ -619,7 +621,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 
   <div class="hero">
     <div class="hero-brand">PEACE WORLD NEWSLETTER</div>
-    <div class="hero-title"><img src="images/175/hero-logo.png" alt="평화세상"></div>
+    <div class="hero-title"><img class="hero-animate" src="images/175/hero-logo.png" alt="평화세상"></div>
     <div class="hero-badge"><span class="dot"></span>통권 175호</div>
   </div>
 
@@ -1679,6 +1681,15 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     titleTargets.forEach(function(el) { titleObserver.observe(el); });
   } else {
     titleTargets.forEach(function(el) { el.classList.add('in-view'); });
+  }
+
+  // 히어로 로고: 등장 애니메이션이 끝나면 애니메이션 소유권을 내려놓아서
+  // 이후 마우스 호버 확대 효과가 정상 작동하도록 함
+  var heroLogo = document.querySelector('.hero-title img.hero-animate');
+  if (heroLogo) {
+    heroLogo.addEventListener('animationend', function() {
+      heroLogo.classList.remove('hero-animate');
+    });
   }
 })();
 </script>
