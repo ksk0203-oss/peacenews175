@@ -140,9 +140,7 @@ body {
 .index-list a {
   display: flex; align-items: center; gap: 14px;
   padding: 14px 4px; text-decoration: none; color: var(--text-black);
-  transition: opacity 0.15s;
 }
-.index-list a:hover { opacity: 0.6; }
 .index-num {
   flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
   background: var(--forest-900); color: var(--white);
@@ -151,9 +149,15 @@ body {
 }
 .index-num.alt { background: var(--sage); color: var(--forest-900); }
 .index-text { flex: 1; }
-.index-title { font-family: 'Noto Serif KR'; font-size: 16px; font-weight: 700; color: var(--forest-900); }
+.index-title {
+  display: inline-block; font-family: 'Noto Serif KR'; font-size: 16px; font-weight: 700; color: var(--forest-900);
+  transform-origin: left center;
+  transition: font-size 0.25s ease, color 0.25s ease;
+}
+.index-list a:hover .index-title { font-size: 18.5px; color: var(--terracotta); }
 .index-sub { font-size: 13px; color: var(--text-gray); margin-top: 2px; }
-.index-arrow { color: var(--terracotta); font-size: 15px; }
+.index-arrow { color: var(--terracotta); font-size: 15px; transition: transform 0.25s ease; }
+.index-list a:hover .index-arrow { transform: translateX(4px); }
 
 /* ── 오너먼트 디바이더 ── */
 .ornament-divider {
