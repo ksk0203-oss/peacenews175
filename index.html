@@ -1344,6 +1344,8 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   var currentBtn = null;
   var currentRate = 1;
   var bestVoice = null;
+  var currentSentences = [];
+  var currentIndex = 0;
 
   function pickBestVoice() {
     var voices = window.speechSynthesis.getVoices() || [];
@@ -1395,6 +1397,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 
   // 문장 단위로 잘라서 각각 별도 발화로 큐에 쌓으면, 긴 글 전체를 하나로 읽을 때보다
   // 문장 사이의 자연스러운 끊어읽기(호흡)가 생기고 억양도 덜 단조로워짐
+  // + 배속을 바꿀 때 "지금 읽고 있던 문장부터" 이어갈 수 있는 단위도 됨
   function splitIntoSentences(text) {
     var raw = text.match(/[^.!?]+[.!?]*/g) || [text];
     return raw.map(function(s) { return s.trim(); }).filter(Boolean);
@@ -1407,30 +1410,39 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     btn.querySelector('.tts-icon').textContent = '\u{1F50A}';
   }
 
-  function speak(articleId, btn, rate) {
-    var text = getArticleText(articleId);
-    if (!text) return;
-    var sentences = splitIntoSentences(text);
-
+  // fromIndex부터 currentSentences를 이어서 재생 (배속 변경 시 이어듣기에도 재사용)
+  function speakFrom(articleId, btn, rate, fromIndex) {
     currentId = articleId; currentBtn = btn;
     btn.classList.add('playing');
     btn.querySelector('.tts-label').textContent = '정지';
     btn.querySelector('.tts-icon').textContent = '\u23F9';
 
     ensureVoice(function() {
-      sentences.forEach(function(sentence, idx) {
-        var utter = new SpeechSynthesisUtterance(sentence);
-        utter.lang = 'ko-KR';
-        utter.rate = rate;
-        utter.pitch = 1;
-        if (bestVoice) utter.voice = bestVoice;
-        if (idx === sentences.length - 1) {
-          utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; };
-          utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; };
-        }
-        window.speechSynthesis.speak(utter);
-      });
+      var sentences = currentSentences;
+      for (var idx = fromIndex; idx < sentences.length; idx++) {
+        (function(idx) {
+          var utter = new SpeechSynthesisUtterance(sentences[idx]);
+          utter.lang = 'ko-KR';
+          utter.rate = rate;
+          utter.pitch = 1;
+          if (bestVoice) utter.voice = bestVoice;
+          utter.onstart = function() { currentIndex = idx; };
+          if (idx === sentences.length - 1) {
+            utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; currentIndex = 0; };
+            utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; currentIndex = 0; };
+          }
+          window.speechSynthesis.speak(utter);
+        })(idx);
+      }
     });
+  }
+
+  function speak(articleId, btn, rate) {
+    var text = getArticleText(articleId);
+    if (!text) return;
+    currentSentences = splitIntoSentences(text);
+    currentIndex = 0;
+    speakFrom(articleId, btn, rate, 0);
   }
 
   window.toggleTTS = function(articleId, btn) {
@@ -1441,7 +1453,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     if (currentId === articleId) {
       window.speechSynthesis.cancel();
       resetBtn(currentBtn);
-      currentId = null; currentBtn = null;
+      currentId = null; currentBtn = null; currentIndex = 0;
       return;
     }
     window.speechSynthesis.cancel();
@@ -1453,10 +1465,10 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     currentRate = parseFloat(sel.value);
     // 모든 배속 선택창을 동일한 값으로 맞춤
     document.querySelectorAll('.tts-rate').forEach(function(s) { s.value = sel.value; });
-    // 현재 재생 중이면 새 배속으로 이어서 다시 시작
+    // 재생 중이면 처음으로 되돌아가지 않고, 지금 읽던 문장부터 새 배속으로 이어서 재생
     if (currentId && currentBtn) {
       window.speechSynthesis.cancel();
-      speak(currentId, currentBtn, currentRate);
+      speakFrom(currentId, currentBtn, currentRate, currentIndex);
     }
   };
 
