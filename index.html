@@ -104,12 +104,17 @@ body {
   display: block; margin: 0 auto;
   width: 100%; max-width: 420px; height: auto;
   opacity: 0; transform: scale(0.55) translateY(24px);
-  animation: heroLogoIn 1.3s cubic-bezier(0.22, 1.4, 0.36, 1) 0.15s forwards;
+  animation: heroLogoIn 2.6s cubic-bezier(0.22, 1.4, 0.36, 1) 0.2s forwards;
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
+.hero-title img:hover {
+  transform: scale(1.12);
 }
 @keyframes heroLogoIn {
   0%   { opacity: 0; transform: scale(0.55) translateY(24px); }
-  60%  { opacity: 1; transform: scale(1.08) translateY(-4px); }
-  80%  { transform: scale(0.97) translateY(1px); }
+  65%  { opacity: 1; transform: scale(1.08) translateY(-4px); }
+  85%  { transform: scale(0.97) translateY(1px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 .hero-badge {
