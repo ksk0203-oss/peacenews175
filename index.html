@@ -1520,7 +1520,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   // 실제로 음성엔진에 전달하는 값만 살짝 낮춰서 체감 속도를 맞춘다
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   function getEffectiveRate(nominalRate) {
-    return isIOS ? nominalRate * 0.75 : nominalRate;
+    return isIOS ? nominalRate * 0.85 : nominalRate;
   }
 
   // fromIndex부터 currentSentences를 이어서 재생 (배속 변경 시 이어듣기에도 재사용)
