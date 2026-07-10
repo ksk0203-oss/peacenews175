@@ -513,6 +513,7 @@ body {
   .index-tab:hover { transform: none; }
   .index-tab .roman { display: inline; margin-bottom: 0; margin-right: 4px; font-size: 10px; }
   body { padding-bottom: 54px; }
+  .float-controls { bottom: 66px; }
 }
 
 @media (max-width: 640px) {
@@ -1456,8 +1457,11 @@ body.dark-mode .font-controls { background: var(--terracotta); }
         if (!v.localService) s += 3;               // 온라인(네트워크) 음성이 대체로 더 자연스러움
         if (n.indexOf('google') !== -1) s += 2;
         if (n.indexOf('neural') !== -1) s += 2;
+        // iOS는 음성이 전부 localService=true라서, 이름에 붙는 품질 표시로 구분
+        if (n.indexOf('enhanced') !== -1) s += 4;
+        if (n.indexOf('premium') !== -1) s += 5;
         if (n.indexOf('yuna') !== -1 || n.indexOf('sora') !== -1 || n.indexOf('injoon') !== -1) s += 1;
-        if (n.indexOf('compact') !== -1) s -= 2;
+        if (n.indexOf('compact') !== -1) s -= 3;
         return s;
       }
       return score(b) - score(a);
@@ -1523,10 +1527,14 @@ body.dark-mode .font-controls { background: var(--terracotta); }
           utter.rate = rate;
           utter.pitch = 1;
           if (bestVoice) utter.voice = bestVoice;
+          // onstart가 정확하지만, 모바일 브라우저(특히 iOS)는 onstart가 아예 발동하지 않는
+          // 경우가 있어 onend에서도 다음 문장 번호로 넘겨서 이중으로 위치를 추적함
           utter.onstart = function() { currentIndex = idx; };
           if (idx === sentences.length - 1) {
             utter.onend = function() { resetBtn(btn); currentId = null; currentBtn = null; currentIndex = 0; };
             utter.onerror = function() { resetBtn(btn); currentId = null; currentBtn = null; currentIndex = 0; };
+          } else {
+            utter.onend = function() { currentIndex = idx + 1; };
           }
           window.speechSynthesis.speak(utter);
         })(idx);
