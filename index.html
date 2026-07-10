@@ -607,6 +607,34 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   font-family: 'Noto Sans KR'; font-size: 12.5px; font-weight: 600; color: var(--forest-900);
   cursor: pointer;
 }
+.opinion-form {
+  display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px;
+}
+.opinion-input, .opinion-textarea {
+  font-family: 'Noto Sans KR', sans-serif; font-size: 15px; color: var(--text-black);
+  background: var(--white); border: 1px solid var(--border-light); border-radius: 8px;
+  padding: 12px 14px; outline: none;
+}
+.opinion-input:focus, .opinion-textarea:focus { border-color: var(--forest-line); }
+.opinion-textarea { resize: vertical; line-height: 1.6; }
+.opinion-submit {
+  font-family: 'Noto Sans KR', sans-serif; font-size: 14.5px; font-weight: 700;
+  color: var(--white); background: var(--forest-900); border: none; border-radius: 8px;
+  padding: 13px; cursor: pointer; letter-spacing: 0.3px;
+}
+.opinion-submit:hover { background: var(--forest-700); }
+.opinion-status { font-size: 13px; color: var(--terracotta); min-height: 16px; }
+.opinion-list { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+.opinion-item {
+  background: var(--sage-light); border-radius: 8px; padding: 16px 18px;
+}
+.opinion-item-content {
+  font-size: 15px; line-height: 1.75; color: var(--text-black); white-space: pre-wrap;
+}
+.opinion-item-meta {
+  font-size: 12.5px; color: var(--text-gray); margin-top: 8px;
+}
+.opinion-empty { font-size: 14px; color: var(--text-gray); text-align: center; padding: 12px 0; }
 </style>
 </head>
 <body>
@@ -1354,6 +1382,29 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 
   </div>
 
+  <!-- 동역자 의견 나눔 -->
+  <div class="article" id="article-opinion">
+    <div class="article-head">
+      <div class="article-heading">
+        <span class="section-label">의견 나눔</span>
+        <div class="article-title">동역자 여러분들의 의견을 기다립니다</div>
+        <div class="article-byline">소식지에 대한 의견이나 나누고 싶은 말씀을 자유롭게 남겨주세요</div>
+      </div>
+    </div>
+  </div>
+  <div class="body-copy">
+
+    <form id="opinion-form" class="opinion-form">
+      <input type="text" id="opinion-name" class="opinion-input" placeholder="이름 (선택 사항)" />
+      <textarea id="opinion-content" class="opinion-textarea" placeholder="의견을 입력해주세요" required rows="4"></textarea>
+      <button type="submit" class="opinion-submit">의견 남기기</button>
+      <p id="opinion-status" class="opinion-status"></p>
+    </form>
+
+    <div id="opinion-list" class="opinion-list"></div>
+
+  </div>
+
 </div>
 
 <div class="promo-overlay" id="promoOverlay">
@@ -1695,6 +1746,83 @@ body.dark-mode .font-controls { background: var(--terracotta); }
       heroLogo.classList.remove('hero-animate');
     });
   }
+})();
+</script>
+
+<script>
+(function() {
+  var SUPABASE_URL = "https://nutoxezmxupvjmnrxffd.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_3tqe8xHfESAvk1goovkqYg_GaB_X7ou";
+
+  var form = document.getElementById('opinion-form');
+  var statusEl = document.getElementById('opinion-status');
+  var listEl = document.getElementById('opinion-list');
+  if (!form) return;
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function loadOpinions() {
+    fetch(SUPABASE_URL + '/rest/v1/opinions?select=name,content,created_at&order=created_at.desc', {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: 'Bearer ' + SUPABASE_KEY
+      }
+    })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        listEl.innerHTML = '';
+        if (!data || data.length === 0) {
+          listEl.innerHTML = '<p class="opinion-empty">아직 등록된 의견이 없습니다. 첫 의견을 남겨보세요.</p>';
+          return;
+        }
+        data.forEach(function(item) {
+          var date = new Date(item.created_at).toLocaleDateString('ko-KR');
+          var div = document.createElement('div');
+          div.className = 'opinion-item';
+          div.innerHTML =
+            '<p class="opinion-item-content">' + escapeHtml(item.content) + '</p>' +
+            '<p class="opinion-item-meta">' + (item.name ? escapeHtml(item.name) : '익명') + ' · ' + date + '</p>';
+          listEl.appendChild(div);
+        });
+      })
+      .catch(function(err) { console.error('의견을 불러오지 못했습니다:', err); });
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name = document.getElementById('opinion-name').value.trim();
+    var content = document.getElementById('opinion-content').value.trim();
+    if (!content) return;
+
+    statusEl.textContent = '제출 중입니다...';
+
+    fetch(SUPABASE_URL + '/rest/v1/opinions', {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({ name: name || null, content: content })
+    })
+      .then(function(res) {
+        if (!res.ok) throw new Error('전송 실패');
+        statusEl.textContent = '의견이 등록되었습니다. 감사합니다!';
+        form.reset();
+        loadOpinions();
+      })
+      .catch(function(err) {
+        statusEl.textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+        console.error(err);
+      });
+  });
+
+  loadOpinions();
 })();
 </script>
 
