@@ -1515,6 +1515,14 @@ body.dark-mode .font-controls { background: var(--terracotta); }
     btn.querySelector('.tts-icon').textContent = '\u{1F50A}';
   }
 
+  // iOS(사파리)는 동일한 rate 값이라도 데스크톱/안드로이드보다 훨씬 빠르게 들리는
+  // 알려진 플랫폼 특성이 있어, 표시되는 배속(0.75x/1x/1.25x...)은 그대로 두고
+  // 실제로 음성엔진에 전달하는 값만 살짝 낮춰서 체감 속도를 맞춘다
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  function getEffectiveRate(nominalRate) {
+    return isIOS ? nominalRate * 0.75 : nominalRate;
+  }
+
   // fromIndex부터 currentSentences를 이어서 재생 (배속 변경 시 이어듣기에도 재사용)
   function speakFrom(articleId, btn, rate, fromIndex) {
     currentId = articleId; currentBtn = btn;
@@ -1528,7 +1536,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
         (function(idx) {
           var utter = new SpeechSynthesisUtterance(sentences[idx]);
           utter.lang = 'ko-KR';
-          utter.rate = rate;
+          utter.rate = getEffectiveRate(rate);
           utter.pitch = 1;
           if (bestVoice) utter.voice = bestVoice;
           // onstart가 정확하지만, 모바일 브라우저(특히 iOS)는 onstart가 아예 발동하지 않는
