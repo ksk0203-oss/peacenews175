@@ -350,29 +350,6 @@ body {
   margin-top: 22px; text-align: right; font-size: 13.5px; color: var(--text-gray);
 }
 
-/* ── 팝업(프로모션) ── */
-.promo-overlay {
-  position: fixed; inset: 0; z-index: 999;
-  background: rgba(15,39,33,0.72);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-}
-.promo-overlay.hidden { display: none; }
-.promo-modal { position: relative; max-width: 340px; width: 100%; }
-.promo-modal a { display: block; }
-.promo-modal img {
-  width: 100%; display: block; border-radius: 10px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-}
-.promo-close {
-  position: absolute; top: -14px; right: -14px;
-  width: 34px; height: 34px; border-radius: 50%;
-  background: var(--white); color: var(--forest-900);
-  border: none; font-size: 18px; font-weight: 700; line-height: 1;
-  cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-  display: flex; align-items: center; justify-content: center;
-}
-
 /* ── 후원 감사 (기사 7) ── */
 .sublist-head {
   font-family: 'Noto Serif KR'; font-weight: 700; font-size: 15.5px; color: var(--forest-900);
@@ -1412,35 +1389,8 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 
 </div>
 
-<div class="promo-overlay" id="promoOverlay">
-  <div class="promo-modal">
-    <button class="promo-close" id="promoClose" aria-label="닫기">&times;</button>
-    <a href="#corp-ad" id="promoLink">
-      <img src="images/175/kazakhstan-poster.jpg" alt="2026 카자흐스탄 평화기행 - 고려인을 만나러 갑니다">
-    </a>
-  </div>
-</div>
-
 <script>
-(function() {
-  var overlay = document.getElementById('promoOverlay');
-  var closeBtn = document.getElementById('promoClose');
-  var link = document.getElementById('promoLink');
-  function closePromo() { overlay.classList.add('hidden'); }
-  closeBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    closePromo();
-  });
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) closePromo();
-  });
-  link.addEventListener('click', function() {
-    closePromo();
-  });
-})();
-</script>
 
-<script>
 (function() {
   var currentId = null;
   var currentBtn = null;
