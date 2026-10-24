@@ -1802,6 +1802,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
 (function() {
   var SUPABASE_URL = "https://nutoxezmxupvjmnrxffd.supabase.co";
   var SUPABASE_KEY = "sb_publishable_3tqe8xHfESAvk1goovkqYg_GaB_X7ou";
+  var ISSUE = 175; // 소식지 호수: 의견을 호수별로 구분해 저장·조회
 
   var form = document.getElementById('opinion-form');
   var statusEl = document.getElementById('opinion-status');
@@ -1815,7 +1816,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   }
 
   function loadOpinions() {
-    fetch(SUPABASE_URL + '/rest/v1/opinions?select=name,content,created_at&order=created_at.desc', {
+    fetch(SUPABASE_URL + '/rest/v1/opinions?select=name,content,created_at&issue=eq.' + ISSUE + '&order=created_at.desc', {
       headers: {
         apikey: SUPABASE_KEY,
         Authorization: 'Bearer ' + SUPABASE_KEY
@@ -1857,7 +1858,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
         'Content-Type': 'application/json',
         Prefer: 'return=minimal'
       },
-      body: JSON.stringify({ name: name || null, content: content })
+      body: JSON.stringify({ name: name || null, content: content, issue: ISSUE })
     })
       .then(function(res) {
         if (!res.ok) throw new Error('전송 실패');
