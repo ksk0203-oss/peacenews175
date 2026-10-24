@@ -220,6 +220,7 @@ body {
 .body-copy p.body-text, p.body-text {
   font-size: 17.5px; line-height: 1.95; color: var(--text-black); text-align: left;
   padding: 0 28px; margin-top: 20px;
+  word-break: keep-all; overflow-wrap: break-word;
 }
 .body-copy p.body-text:first-child { margin-top: 0; }
 
@@ -510,11 +511,17 @@ body.dark-mode .donate-link { color: var(--text-black); border-color: var(--sage
 }
 
 @media (max-width: 640px) {
+  .float-btn { width: 40px; height: 40px; }
+  .float-controls .ctrl-toggle { display: flex; }
+  .float-controls:not(.open) #shareBtn,
+  .float-controls:not(.open) #darkBtn,
+  .float-controls:not(.open) .font-controls { display: none; }
   .utility-bar, .footer-box, .bottom-bar { padding-left: 16px; padding-right: 16px; }
   .hero { padding: 44px 16px 36px; }
   .article, .body-copy, .index-box, .timeline-section { padding-left: 16px; padding-right: 16px; }
   .section-major, .sub-heading { padding-left: 16px; padding-right: 16px; }
   p.body-text { padding-left: 16px; padding-right: 16px; }
+  .body-copy p.body-text { padding-left: 0; padding-right: 0; } /* .body-copy가 이미 16px 여백을 가짐(데스크톱 규칙과 같은 우선순위로 덮어씀) */
   .pullquote, .note-box { margin-left: 16px; margin-right: 16px; }
   .ornament-divider { padding-left: 16px; padding-right: 16px; }
   .hero-title img { max-width: 300px; }
@@ -587,6 +594,7 @@ body.dark-mode .donate-link { color: var(--text-black); border-color: var(--sage
 }
 .font-controls .float-btn { box-shadow: none; border-radius: 0; }
 .font-controls .float-btn + .float-btn { border-top: 1px solid rgba(255,255,255,0.2); }
+.ctrl-toggle { display: none; font-size: 13px; }
 .top-btn {
   opacity: 0; visibility: hidden; transform: translateY(8px);
   transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
@@ -647,6 +655,56 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   .hero-title img { opacity: 1 !important; transform: none !important; animation: none !important; }
   .article, .body-copy, p.body-text { page-break-inside: avoid; }
 }
+
+/* ── 175호: 같은 포레스트 그린·골드 색조 안의 그라데이션(깊이감) ── */
+body { background: linear-gradient(180deg, #FAFAFA 0%, #ECEFEC 100%) fixed; }
+.utility-bar { background: transparent; }
+.email-wrap { box-shadow: 0 12px 44px rgba(15,39,33,0.16); }
+.hero { background: linear-gradient(155deg, #2F5A4E 0%, #173A31 50%, #0A1D18 100%); }
+.hero::before { background: radial-gradient(circle at 14% 10%, rgba(201,163,111,0.16) 0, transparent 42%), radial-gradient(circle at 88% 86%, rgba(255,255,255,0.06) 0, transparent 46%); }
+.index-num, .article-num, .tl-badge { background: linear-gradient(135deg, #3F6A5D, #0F2721); color: #fff; }
+.index-num.alt, .section-num { background: linear-gradient(135deg, #E3E8E7, #C5D0CD); color: #0F2721; }
+.pullquote { background: linear-gradient(135deg, #FBF6EE 0%, #F3EAE0 100%); }
+.ornament-divider .diamond { background: linear-gradient(135deg, #C9A36F, #A37F52); }
+.ornament-divider .line { background: linear-gradient(90deg, transparent, #CFC6B5); }
+.footer-box { background: linear-gradient(180deg, #EEF0EF, #E3E7E5); }
+.bottom-bar { background: linear-gradient(90deg, #0A1D18 0%, #1B4037 100%); }
+.index-tab--01 { background: linear-gradient(160deg, #C9A36F, #A37F52); }
+.index-tab--02 { background: linear-gradient(160deg, #4F6A64, #3A514D); }
+.index-tab--03 { background: linear-gradient(160deg, #1B4037, #0F2721); }
+.index-tab--04 { background: linear-gradient(160deg, #8A9C85, #6E7F6A); }
+.index-tab--05 { background: linear-gradient(160deg, #86759A, #6B5B7E); }
+.index-tab--06 { background: linear-gradient(160deg, #A5865F, #8A6D4A); }
+.index-tab--07 { background: linear-gradient(160deg, #4F6A64, #3A514D); }
+/* 다크 모드에서는 기존 어두운 색을 그대로 사용 */
+body.dark-mode { background: var(--off-white); }
+body.dark-mode .email-wrap { box-shadow: 0 12px 44px rgba(0,0,0,0.5); }
+body.dark-mode .pullquote { background: var(--terracotta-light); }
+body.dark-mode .footer-box { background: var(--footer-gray); }
+body.dark-mode .index-num.alt, body.dark-mode .section-num { background: var(--sage); color: var(--forest-900); }
+body.dark-mode .ornament-divider .line { background: var(--border-light); }
+/* 다크 모드: 어두운 색으로 고정돼 있던 제목·인용구 글자를 밝게 */
+body.dark-mode .index-title,
+body.dark-mode .article-title,
+body.dark-mode .drop-cap,
+body.dark-mode .pullquote p,
+body.dark-mode .section-title,
+body.dark-mode .timeline-title,
+body.dark-mode .news-date,
+body.dark-mode .corp-ad-title,
+body.dark-mode .corp-ad .ad-quote,
+body.dark-mode .sublist-head,
+body.dark-mode .acct-row span:last-child,
+body.dark-mode .qr-label,
+body.dark-mode .closing-verse,
+body.dark-mode .footer-mark,
+body.dark-mode .tts-rate,
+body.dark-mode .tts-btn:not(.playing) { color: #ECEEE9; }
+body.dark-mode [style*="color:var(--forest-900)"], body.dark-mode [style*="color: var(--forest-900)"] { color: #ECEEE9 !important; }
+body.dark-mode .section-label, body.dark-mode .index-label, body.dark-mode .index-arrow { color: #D9B98A; }
+body.dark-mode .opinion-submit { color: #fff; }
+body.dark-mode .article-subtitle { color: #B9C7C3; }
+body.dark-mode .tl-year { color: #B9C7C3; }
 </style>
 </head>
 <body>
@@ -1638,7 +1696,7 @@ body.dark-mode .font-controls { background: var(--terracotta); }
   <div class="font-controls">
     <button class="float-btn" onclick="changeFontSize(1)" aria-label="글자 크게">A+</button>
     <button class="float-btn" onclick="changeFontSize(-1)" aria-label="글자 작게">A-</button>
-  </div>
+  </div>  <button class="float-btn ctrl-toggle" id="ctrlToggle" aria-label="공유·다크모드·글자 크기 열기" aria-expanded="false" onclick="var c=document.querySelector('.float-controls');var o=c.classList.toggle('open');this.textContent=o?'✕':'Aa';this.setAttribute('aria-expanded',o)">Aa</button>
 </div>
 
 <script>
